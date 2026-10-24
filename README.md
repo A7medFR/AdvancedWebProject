@@ -1,6 +1,6 @@
 # WeatherMap SPA — Asynchronous Client-Side Weather & Mapping Application
 
-> **Advanced Web Technologies (Lectures 4–10 Implementation)**  
+> **Advanced Web Technologies *  
 > **Course Project 2 Specification**  
 > **Submission Deliverables:** GitHub Repository + Live GitHub Pages Deployment
 
