@@ -263,35 +263,6 @@ body {
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
 }
 
-/* API Key Manager Button */
-.btn-api-key {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(14, 25, 44, 0.85);
-  border: 1px solid var(--navy-border);
-  color: var(--text-secondary);
-  font-family: var(--font-display);
-  font-size: 0.82rem;
-  font-weight: 600;
-  padding: 0.38rem 0.85rem;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.btn-api-key i {
-  color: var(--accent-amber);
-  font-size: 0.78rem;
-}
-
-.btn-api-key:hover {
-  background: rgba(26, 44, 76, 0.95);
-  border-color: var(--accent-amber);
-  color: var(--text-primary);
-  transform: translateY(-1px);
-}
-
 /* Live Status Pill */
 .status-pill {
   display: flex;

@@ -35,7 +35,6 @@
     locateMeBtn: document.getElementById('locate-me-btn'),
     unitCelsius: document.getElementById('unit-celsius'),
     unitFahrenheit: document.getElementById('unit-fahrenheit'),
-    apiKeyBtn: document.getElementById('api-key-btn'),
     statusLabel: document.getElementById('status-label'),
     favoritesList: document.getElementById('favorites-list'),
     saveFavoriteBtn: document.getElementById('save-favorite-btn'),
@@ -240,45 +239,6 @@
   }
 
   /**
-   * Retrieves the active OpenWeatherMap API key (from LocalStorage or CONFIG).
-   */
-  function getActiveApiKey() {
-    const saved = localStorage.getItem('weathermap_api_key');
-    if (saved && saved.trim()) return saved.trim();
-    if (CONFIG.OPENWEATHER_API_KEY && CONFIG.OPENWEATHER_API_KEY !== 'YOUR_OPENWEATHERMAP_API_KEY') {
-      return CONFIG.OPENWEATHER_API_KEY;
-    }
-    return '';
-  }
-
-  /**
-   * Interactive API Key Manager: Allows users & evaluators to input/update their OpenWeatherMap API key.
-   */
-  function handleConfigureApiKey() {
-    const current = getActiveApiKey();
-    const input = prompt(
-      'Enter your OpenWeatherMap API Key:\n(Stored safely in browser LocalStorage. Leave blank to use simulated baseline data)',
-      current
-    );
-
-    if (input !== null) {
-      const clean = input.trim();
-      if (clean) {
-        localStorage.setItem('weathermap_api_key', clean);
-        showAlert('API Key Saved', 'OpenWeatherMap API key saved locally in browser.', 'success');
-      } else {
-        localStorage.removeItem('weathermap_api_key');
-        showAlert('Key Cleared', 'Now using verified rubric baseline meteorological data.', 'warning');
-      }
-
-      if (state.currentWeatherData) {
-        const { lat, lon } = state.currentWeatherData.coord;
-        executeWorkflow(lat, lon, state.currentLocationName, false);
-      }
-    }
-  }
-
-  /**
    * Queries OpenWeatherMap Current Weather Data endpoint asynchronously.
    * @param {number} lat - Latitude
    * @param {number} lon - Longitude
@@ -289,14 +249,7 @@
   async function fetchOpenWeatherData(lat, lon, units = state.currentUnits, locationName = '') {
     setLoading(true, 'Fetching meteorological data...');
 
-    const apiKey = getActiveApiKey();
-
-    // If key is a placeholder or not provided, gracefully return high-fidelity rubric baseline data
-    if (!apiKey || apiKey === 'YOUR_OPENWEATHERMAP_API_KEY') {
-      return generateFallbackWeather(lat, lon, units, locationName);
-    }
-
-    const url = `${CONFIG.OPENWEATHER_BASE_URL}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=${units}`;
+    const url = `${CONFIG.OPENWEATHER_BASE_URL}?lat=${lat}&lon=${lon}&appid=${CONFIG.OPENWEATHER_API_KEY}&units=${units}`;
 
     try {
       const response = await fetch(url);
@@ -918,9 +871,6 @@
 
     // Save Active City button
     DOM.saveFavoriteBtn.addEventListener('click', addCurrentToFavorites);
-
-    // API Key configuration button
-    DOM.apiKeyBtn.addEventListener('click', handleConfigureApiKey);
 
     // Unit toggle buttons
     DOM.unitCelsius.addEventListener('click', () => setUnits('metric'));

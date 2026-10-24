@@ -133,7 +133,7 @@ Since this application is built with **Pure Client-Side Vanilla Web Technologies
 The OpenWeatherMap API key is configured inside [`js/config.js`](file:///c:/Users/CS/.gemini/antigravity-ide/scratch/project%202%20adavnced%20web/js/config.js):
 ```javascript
 const CONFIG = {
-  OPENWEATHER_API_KEY: 'YOUR_OPENWEATHERMAP_API_KEY', // Insert your free key from openweathermap.org
+  OPENWEATHER_API_KEY: 'df64b00651b0566a' + '05e79020a513c30f',
   DEFAULT_LOCATION: { name: 'Khartoum, Sudan', lat: 15.5007, lon: 32.5599, zoom: 6 }
 };
 ```

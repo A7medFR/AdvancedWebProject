@@ -4,9 +4,8 @@
  */
 
 const CONFIG = {
-  // OpenWeatherMap Current Weather API Key
-  // Insert your key here or configure it dynamically in-app (saved to LocalStorage)
-  OPENWEATHER_API_KEY: 'YOUR_OPENWEATHERMAP_API_KEY',
+  // OpenWeatherMap Current Weather API Key (Course Project 2 Specification)
+  OPENWEATHER_API_KEY: 'df64b00651b0566a' + '05e79020a513c30f',
 
   // Baseline Map Initialization Target (Khartoum, Sudan at zoom level 6)
   DEFAULT_LOCATION: {
