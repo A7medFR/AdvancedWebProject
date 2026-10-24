@@ -365,8 +365,8 @@
             <span class="infowindow-temp-unit">${tempUnit}</span>
           </div>
           <div class="infowindow-weather-icon-box">
-            <img class="infowindow-icon" id="infowindow-icon-img" src="${iconUrl}" alt="${escapeHTML(weather.description || 'Weather condition')}" loading="lazy" />
-            <i class="fa-solid ${getFontAwesomeWeatherIcon(weather.icon, weather.main)} infowindow-fa-icon hidden" id="infowindow-fa-fallback" aria-hidden="true"></i>
+            <img class="infowindow-icon hidden" id="infowindow-icon-img" src="${iconUrl}" alt="" loading="lazy" />
+            <i class="fa-solid ${getFontAwesomeWeatherIcon(weather.icon, weather.main)} infowindow-fa-icon" id="infowindow-fa-fallback" aria-hidden="true"></i>
             <span class="infowindow-desc">${escapeHTML(weather.description || weather.main || 'Clear')}</span>
           </div>
         </div>
