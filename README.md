@@ -92,6 +92,16 @@ In accordance with **Section 6 (Novelty & Advanced Features)**, the following ex
   - **Copy to Clipboard**: Quick-copy formatted weather report with animated feedback.
 - 📍 **GPS "Locate Me"**:
   - Uses the HTML5 Geolocation API with graceful permission handling.
+- 🤖 **Context-Aware Weather AI Advisor (Chatbot)**:
+  - Floating action button (FAB) toggles an expandable frosted liquid-glass chat drawer.
+  - Contextual awareness: dynamically tracks the active city and current temperature.
+  - Multi-variable meteorological intelligence engine:
+    - **Wardrobe & Clothing Advice**: Evaluates ambient temperature, wind chill, and precipitation to suggest optimal attire, breathable fabrics, and footwear.
+    - **Outdoor Sports & Fitness**: Evaluates heat stress, wind speed, and rain to rate outdoor workouts (running, cycling, tennis) from 1 to 5 stars.
+    - **Commute & Travel Safety**: Analyzes road surface indices, hydroplaning hazards, and fog/mist visibility.
+    - **Health, Hydration & UV Protection**: Calculates daily water requirements, dry air warnings, and solar UV protection advisories.
+  - Interactive quick-prompt chips (`👕 What should I wear?`, `🏃 Outdoor activities?`, `🚗 Commute & Travel`, `💧 Health & Hydration`).
+  - Realistic animated typing indicator with conversational pacing and chat history clearance.
 
 ---
 
@@ -162,7 +172,7 @@ To deploy this project to GitHub Pages:
 | **4. Responsive Layout & CSS Styling** | 100% | Strictly conforming `70vh` map container, solid Navy rounded border, Google Fonts (`Outfit` & `Roboto`), prettier form fields, and responsive liquid glass styling. |
 | **5. Loading States & Robust Error Handling** | 100% | Animated CSS spinner active during HTTP wait; user-friendly floating alert cards for geocoding failures or 404 responses. |
 | **6. Repository, README & Best Practices** | 100% | Clean modular file structure, comprehensive README, and 10+ organic, descriptive git commits. |
-| **7. Novelty & Advanced Web API Extensions** | 100% | LocalStorage Favorites, Map Click-to-Inspect, °C/°F unit toggle, Web Share API, and direct Facebook integration. |
+| **7. Novelty & Advanced Web API Extensions** | 100% | Weather AI Chatbot Advisor, LocalStorage Favorites, Map Click-to-Inspect, °C/°F unit toggle, Web Share API, and direct Facebook integration. |
 
 ---
 

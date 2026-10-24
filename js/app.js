@@ -48,7 +48,17 @@
     shareTwitterBtn: document.getElementById('share-twitter-btn'),
     shareWhatsappBtn: document.getElementById('share-whatsapp-btn'),
     shareCopyBtn: document.getElementById('share-copy-btn'),
-    copyBtnText: document.getElementById('copy-btn-text')
+    copyBtnText: document.getElementById('copy-btn-text'),
+    // Weather AI Advisor Elements
+    aiFabBtn: document.getElementById('ai-fab-btn'),
+    aiChatDrawer: document.getElementById('ai-chat-drawer'),
+    aiCloseBtn: document.getElementById('ai-close-btn'),
+    aiClearBtn: document.getElementById('ai-clear-btn'),
+    aiContextBadge: document.getElementById('ai-context-badge'),
+    aiMessagesContainer: document.getElementById('ai-messages-container'),
+    aiInputForm: document.getElementById('ai-input-form'),
+    aiInputField: document.getElementById('ai-input-field'),
+    aiChips: document.querySelectorAll('.ai-chip')
   };
 
   /* ==========================================================================
@@ -451,6 +461,9 @@
       // Render InfoWindow (Phase 5)
       renderInfoWindow(weatherData, locationName);
 
+      // Synchronize Weather AI Advisor context badge
+      updateAiContext(locationName, weatherData);
+
       updateSystemStatus('Updated', 'emerald');
     } catch (error) {
       console.error('Workflow error:', error);
@@ -770,6 +783,381 @@
   }
 
   /* ==========================================================================
+     Bonus Novelty 4: Intelligent Weather AI Assistant
+     ========================================================================== */
+
+  const aiChatState = {
+    isOpen: false,
+    history: [],
+    isTyping: false,
+    lastBriefedCity: ''
+  };
+
+  /**
+   * Toggles the AI Chatbot drawer open or closed.
+   * @param {boolean} [forceOpen]
+   */
+  function toggleAiChat(forceOpen) {
+    if (!DOM.aiChatDrawer || !DOM.aiFabBtn) return;
+
+    const shouldOpen = typeof forceOpen === 'boolean' 
+      ? forceOpen 
+      : DOM.aiChatDrawer.classList.contains('hidden');
+
+    aiChatState.isOpen = shouldOpen;
+
+    if (shouldOpen) {
+      DOM.aiChatDrawer.classList.remove('hidden');
+      DOM.aiFabBtn.setAttribute('aria-expanded', 'true');
+      
+      // If we haven't greeted for this city yet, trigger proactive briefing
+      if (aiChatState.history.length === 0 || aiChatState.lastBriefedCity !== state.currentLocationName) {
+        provideProactiveBriefing();
+      }
+      
+      setTimeout(() => {
+        if (DOM.aiInputField) DOM.aiInputField.focus();
+        scrollAiMessagesToBottom();
+      }, 100);
+    } else {
+      DOM.aiChatDrawer.classList.add('hidden');
+      DOM.aiFabBtn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  /**
+   * Updates the AI Context badge with active location name and current temperature.
+   */
+  function updateAiContext(locationName, weatherData) {
+    if (!DOM.aiContextBadge) return;
+    if (!weatherData || !weatherData.main) {
+      DOM.aiContextBadge.textContent = 'Active: None';
+      return;
+    }
+    const unitSymbol = state.currentUnits === 'imperial' ? '°F' : '°C';
+    const temp = Math.round(weatherData.main.temp);
+    const shortName = locationName ? locationName.split(',')[0].trim() : 'Active Location';
+    DOM.aiContextBadge.textContent = `Active: ${shortName}, ${temp}${unitSymbol}`;
+
+    // If chat is currently open and location changed, offer proactive briefing
+    if (aiChatState.isOpen && aiChatState.lastBriefedCity !== locationName) {
+      provideProactiveBriefing();
+    }
+  }
+
+  /**
+   * Provides a proactive, context-aware meteorological briefing for the active city.
+   */
+  function provideProactiveBriefing() {
+    const loc = state.currentLocationName ? state.currentLocationName.split(',')[0].trim() : 'Khartoum';
+    const data = state.currentWeatherData;
+    aiChatState.lastBriefedCity = state.currentLocationName;
+
+    if (!data || !data.main) {
+      renderAiBotMessage(`Hello! I'm your Weather AI Advisor. Click or search any city on the map, and I'll give you instant clothing, travel, and fitness recommendations!`, false);
+      return;
+    }
+
+    const temp = Math.round(data.main.temp);
+    const unitSymbol = state.currentUnits === 'imperial' ? '°F' : '°C';
+    const desc = data.weather && data.weather[0] ? data.weather[0].description : 'clear sky';
+    const wind = Math.round(data.wind ? data.wind.speed : 0);
+    const humidity = data.main.humidity;
+
+    let quickTip = '';
+    const tempC = state.currentUnits === 'imperial' ? (temp - 32) * 5 / 9 : temp;
+
+    if (tempC >= 32) {
+      quickTip = `It's quite warm today—stay hydrated and wear light, breathable fabrics! ☀️`;
+    } else if (tempC <= 14) {
+      quickTip = `It's on the cooler side—a warm jacket or cozy layers are recommended! 🧥`;
+    } else if (desc.includes('rain') || desc.includes('drizzle')) {
+      quickTip = `Rain is detected—grab an umbrella or waterproof shell before heading out! 🌧️`;
+    } else {
+      quickTip = `Conditions look pleasant for outdoor activities and daily routines! 😊`;
+    }
+
+    const briefing = `👋 Welcome! In **${loc}**, it's currently **${temp}${unitSymbol}** with **${desc}** (Humidity: ${humidity}%, Wind: ${wind} m/s).\n\n${quickTip}\n\nAsk me anything or tap the quick chips below!`;
+    
+    renderAiBotMessage(briefing, true);
+  }
+
+  /**
+   * Renders a user message in the chat container.
+   */
+  function renderAiUserMessage(text) {
+    if (!DOM.aiMessagesContainer) return;
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const msgEl = document.createElement('div');
+    msgEl.className = 'ai-message user';
+    msgEl.innerHTML = `
+      <div class="ai-message-bubble">${escapeHTML(text)}</div>
+      <span class="ai-message-time">${time}</span>
+    `;
+
+    DOM.aiMessagesContainer.appendChild(msgEl);
+    aiChatState.history.push({ role: 'user', text, time });
+    scrollAiMessagesToBottom();
+  }
+
+  /**
+   * Renders a bot message with an animated typing indicator.
+   */
+  function renderAiBotMessage(text, withTyping = true) {
+    if (!DOM.aiMessagesContainer) return;
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    if (!withTyping) {
+      const msgEl = document.createElement('div');
+      msgEl.className = 'ai-message bot';
+      msgEl.innerHTML = `
+        <div class="ai-message-bubble">${formatAiMarkdown(text)}</div>
+        <span class="ai-message-time">${time}</span>
+      `;
+      DOM.aiMessagesContainer.appendChild(msgEl);
+      aiChatState.history.push({ role: 'bot', text, time });
+      scrollAiMessagesToBottom();
+      return;
+    }
+
+    // Render typing indicator
+    aiChatState.isTyping = true;
+    const typingEl = document.createElement('div');
+    typingEl.className = 'ai-message bot ai-typing-wrapper';
+    typingEl.innerHTML = `
+      <div class="ai-typing-indicator" aria-label="AI is thinking...">
+        <div class="ai-typing-dot"></div>
+        <div class="ai-typing-dot"></div>
+        <div class="ai-typing-dot"></div>
+      </div>
+    `;
+    DOM.aiMessagesContainer.appendChild(typingEl);
+    scrollAiMessagesToBottom();
+
+    // Typing delay for realistic conversational pacing
+    const delay = Math.min(850, Math.max(400, text.length * 6));
+    setTimeout(() => {
+      typingEl.remove();
+      aiChatState.isTyping = false;
+
+      const msgEl = document.createElement('div');
+      msgEl.className = 'ai-message bot';
+      msgEl.innerHTML = `
+        <div class="ai-message-bubble">${formatAiMarkdown(text)}</div>
+        <span class="ai-message-time">${time}</span>
+      `;
+      DOM.aiMessagesContainer.appendChild(msgEl);
+      aiChatState.history.push({ role: 'bot', text, time });
+      scrollAiMessagesToBottom();
+    }, delay);
+  }
+
+  /**
+   * Formats basic markdown bolding & newlines for bot message bubbles.
+   */
+  function formatAiMarkdown(text) {
+    let safe = escapeHTML(text);
+    // Replace **text** with <strong>text</strong>
+    safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    // Replace newlines with <br>
+    safe = safe.replace(/\n/g, '<br>');
+    return safe;
+  }
+
+  function scrollAiMessagesToBottom() {
+    if (DOM.aiMessagesContainer) {
+      DOM.aiMessagesContainer.scrollTop = DOM.aiMessagesContainer.scrollHeight;
+    }
+  }
+
+  /**
+   * Clears the AI chat history and resets context.
+   */
+  function clearAiHistory() {
+    if (!DOM.aiMessagesContainer) return;
+    DOM.aiMessagesContainer.innerHTML = '';
+    aiChatState.history = [];
+    provideProactiveBriefing();
+  }
+
+  /**
+   * Form submission handler for AI prompt input.
+   */
+  function handleAiSubmit(e) {
+    e.preventDefault();
+    if (!DOM.aiInputField || aiChatState.isTyping) return;
+
+    const query = DOM.aiInputField.value.trim();
+    if (!query) return;
+
+    DOM.aiInputField.value = '';
+    renderAiUserMessage(query);
+
+    // Process intelligence query
+    const reply = analyzeWeatherQuery(query);
+    renderAiBotMessage(reply, true);
+  }
+
+  /**
+   * Handles click on quick prompt chips.
+   */
+  function handleAiChipClick(e) {
+    const chip = e.target.closest('.ai-chip');
+    if (!chip || aiChatState.isTyping) return;
+
+    const promptText = chip.getAttribute('data-prompt') || chip.textContent.trim();
+    renderAiUserMessage(promptText);
+
+    const reply = analyzeWeatherQuery(promptText);
+    renderAiBotMessage(reply, true);
+  }
+
+  /**
+   * Meteorological Intelligence Engine:
+   * Multi-variable heuristic analysis evaluating live OpenWeather data.
+   */
+  function analyzeWeatherQuery(query) {
+    const q = query.toLowerCase();
+    const data = state.currentWeatherData;
+    const loc = state.currentLocationName ? state.currentLocationName.split(',')[0].trim() : 'the active location';
+
+    if (!data || !data.main) {
+      return `I don't have active weather data yet for ${loc}. Please search or select a city on the map first!`;
+    }
+
+    const temp = Math.round(data.main.temp);
+    const feelsLike = Math.round(data.main.feels_like !== undefined ? data.main.feels_like : temp);
+    const unitSymbol = state.currentUnits === 'imperial' ? '°F' : '°C';
+    // Convert to Celsius for uniform heuristic thresholds
+    const tempC = state.currentUnits === 'imperial' ? (temp - 32) * 5 / 9 : temp;
+    const humidity = data.main.humidity || 50;
+    const windSpeed = data.wind ? data.wind.speed : 0;
+    const clouds = data.clouds ? data.clouds.all : 0;
+    const weatherCond = data.weather && data.weather[0] ? data.weather[0].main.toLowerCase() : '';
+    const weatherDesc = data.weather && data.weather[0] ? data.weather[0].description.toLowerCase() : '';
+    const isRaining = weatherCond.includes('rain') || weatherDesc.includes('rain') || weatherCond.includes('drizzle');
+    const isStormy = weatherCond.includes('thunderstorm') || weatherDesc.includes('storm');
+    const isFoggy = weatherCond.includes('fog') || weatherCond.includes('mist') || weatherDesc.includes('haze');
+
+    // 1. Clothing & Outfit Advice
+    if (q.includes('wear') || q.includes('clothe') || q.includes('outfit') || q.includes('jacket') || q.includes('coat') || q.includes('umbrella') || q.includes('shoes') || q.includes('hat') || q.includes('dress')) {
+      let advice = `👔 **Wardrobe Advice for ${loc} (${temp}${unitSymbol}):**\n\n`;
+
+      if (isRaining || isStormy) {
+        advice += `• ☔ **Precipitation Alert:** Grab a sturdy umbrella and a waterproof trench or raincoat. Water-resistant shoes are essential.\n`;
+      }
+      if (tempC >= 32) {
+        advice += `• 👕 **Top:** Lightweight, ultra-breathable linen or loose-fitting 100% cotton (light reflective colors).\n`;
+        advice += `• 🩳 **Bottoms:** Chino shorts, linen trousers, or light skirts.\n`;
+        advice += `• 🕶️ **Accessories:** UV400 sunglasses and a sun hat or cap.\n`;
+        advice += `• 👟 **Footwear:** Breathable mesh sneakers or sandals.`;
+      } else if (tempC >= 22) {
+        advice += `• 👕 **Top:** Comfortable classic T-shirt, polo, or short-sleeved casual shirt.\n`;
+        advice += `• 👖 **Bottoms:** Cotton chinos, light jeans, or casual trousers.\n`;
+        advice += `• 👟 **Footwear:** Everyday sneakers or loafers.\n`;
+        advice += `• 💡 **Tip:** Keep a light windbreaker handy if out late into the evening.`;
+      } else if (tempC >= 15) {
+        advice += `• 🧥 **Layering:** Smart layered outfit—light sweater, denim jacket, or knit cardigan over a tee.\n`;
+        advice += `• 👖 **Bottoms:** Full-length denim or casual pants.\n`;
+        advice += `• 👟 **Footwear:** Closed leather shoes or cushioned walking sneakers.`;
+      } else {
+        advice += `• 🧥 **Heavy Layers:** Thermal base layer, heavy down jacket or wool overcoat.\n`;
+        advice += `• 🧣 **Warmth:** Scarf, beanie, and lined gloves to guard against chilly air.\n`;
+        advice += `• 🥾 **Footwear:** Insulated boots with warm socks.`;
+      }
+
+      if (windSpeed > 8) {
+        advice += `\n• 💨 **Wind Guard:** Noticeable wind (${windSpeed} m/s); a wind-resistant shell is recommended!`;
+      }
+      return advice;
+    }
+
+    // 2. Outdoor Activities & Sports
+    if (q.includes('outdoor') || q.includes('sport') || q.includes('run') || q.includes('jog') || q.includes('exercise') || q.includes('walk') || q.includes('bike') || q.includes('cycling') || q.includes('swim') || q.includes('park')) {
+      let rating = '⭐⭐⭐⭐ Great';
+      let details = '';
+
+      if (isStormy || isRaining) {
+        rating = '⚠️ Not Recommended (Poor)';
+        details = `Wet surfaces create slip hazards, and lightning/rain can disrupt visibility. Consider indoor gym workouts or mobility routines today.`;
+      } else if (tempC >= 34) {
+        rating = '⚠️ Caution (High Heat)';
+        details = `Temperature is ${temp}${unitSymbol} (feels like ${feelsLike}${unitSymbol}). Avoid peak sunlight (11 AM – 4 PM). If running or cycling, head out before 7:30 AM or after sunset, and carry electrolyte hydration.`;
+      } else if (windSpeed > 10) {
+        rating = '⭐⭐ Fair (High Wind)';
+        details = `Brisk winds of ${windSpeed} m/s will create resistance for cycling and running. Parks with tree windbreaks are ideal.`;
+      } else if (tempC >= 16 && tempC <= 26) {
+        rating = '⭐⭐⭐⭐⭐ Perfect Conditions!';
+        details = `Comfortable ambient temperature (${temp}${unitSymbol}), low thermal stress, and clear pathways. Ideal for long-distance runs, cycling, or tennis.`;
+      } else {
+        rating = '⭐⭐⭐ Moderate';
+        details = `Crisp conditions (${temp}${unitSymbol}). Ensure a dynamic warm-up to prepare joints and wear a thermal athletic layer.`;
+      }
+
+      return `🏃 **Outdoor Activities Suitability for ${loc}:**\n\n• **Status:** ${rating}\n• **Analysis:** ${details}\n• **Metrics:** Wind: ${windSpeed} m/s | Humidity: ${humidity}% | Cloud Cover: ${clouds}%`;
+    }
+
+    // 3. Commute, Travel & Driving Safety
+    if (q.includes('commute') || q.includes('travel') || q.includes('drive') || q.includes('driving') || q.includes('traffic') || q.includes('flight') || q.includes('road') || q.includes('trip') || q.includes('safe')) {
+      let safetyStatus = '🟢 Smooth & Clear';
+      let advisories = [];
+
+      if (isFoggy) {
+        safetyStatus = '🟡 Caution: Reduced Visibility';
+        advisories.push('Use low-beam fog lights and maintain triple following distance.');
+      }
+      if (isRaining) {
+        safetyStatus = '🟡 Caution: Slick Roads';
+        advisories.push('Roadways may experience hydroplaning. Reduce highway speeds by 15-20%.');
+      }
+      if (isStormy) {
+        safetyStatus = '🔴 Severe: Storm Conditions';
+        advisories.push('Expect localized ponding and wind gusts. Delay non-urgent highway travel.');
+      }
+      if (windSpeed > 12) {
+        advisories.push(`Strong crosswinds (${windSpeed} m/s); high-profile vehicles should exercise vigilance.`);
+      }
+      if (advisories.length === 0) {
+        advisories.push('Optimal driving visibility and stable atmospheric pressure. Normal travel schedules apply.');
+      }
+
+      return `🚗 **Commute & Travel Briefing for ${loc}:**\n\n• **Road Index:** ${safetyStatus}\n• **Key Advisories:**\n${advisories.map(a => `  - ${a}`).join('\n')}\n• **Current Conditions:** ${data.weather[0].description}, Wind: ${windSpeed} m/s`;
+    }
+
+    // 4. Health, Hydration & UV Advice
+    if (q.includes('health') || q.includes('hydrate') || q.includes('hydration') || q.includes('water') || q.includes('uv') || q.includes('sun') || q.includes('allergy') || q.includes('air') || q.includes('sick') || q.includes('throat')) {
+      let adviceItems = [];
+
+      if (tempC >= 30) {
+        adviceItems.push(`💧 **Hydration Target:** Minimum 3.0 to 3.5 liters of clean water daily. Replenish electrolytes if sweating.`);
+      } else {
+        adviceItems.push(`💧 **Hydration Target:** 2.0 to 2.5 liters daily to maintain cognitive sharpness.`);
+      }
+
+      if (humidity < 25) {
+        adviceItems.push(`🏜️ **Dry Air Warning:** Ambient humidity is low (${humidity}%). Use saline eye drops, lip balm, and skin moisturizer to prevent dryness.`);
+      } else if (humidity > 70) {
+        adviceItems.push(`🌫️ **Muggy Humidity:** Relative humidity is elevated (${humidity}%). Body perspiration evaporates slower; seek air-conditioned environments during afternoon peak.`);
+      }
+
+      if (clouds < 25 && tempC > 20) {
+        adviceItems.push(`☀️ **Solar Radiation:** Low cloud cover (${clouds}%). Apply Broad Spectrum SPF 50+ sunscreen if exposed for >20 minutes.`);
+      }
+
+      return `💧 **Health & Wellness Advisory for ${loc}:**\n\n${adviceItems.join('\n\n')}`;
+    }
+
+    // 5. General Weather / Forecast / Summary
+    if (q.includes('weather') || q.includes('how is') || q.includes('forecast') || q.includes('summary') || q.includes('temperature') || q.includes('hello') || q.includes('hi') || q.includes('hey')) {
+      return `🌤️ **Current Weather Intelligence for ${loc}:**\n\n• **Temperature:** ${temp}${unitSymbol} (Feels like ${feelsLike}${unitSymbol})\n• **Sky:** ${data.weather[0].description}\n• **Relative Humidity:** ${humidity}%\n• **Wind Speed:** ${windSpeed} m/s\n• **Atmospheric Pressure:** ${data.main.pressure || 1013} hPa\n\nYou can ask me: *"What should I wear?"*, *"Is it good for running?"*, or *"Driving safety conditions?"*`;
+    }
+
+    // 6. Contextual Fallback for any other questions
+    return `🤖 In **${loc}**, the temperature is **${temp}${unitSymbol}** with **${data.weather[0].description}** (Wind: ${windSpeed} m/s, Humidity: ${humidity}%).\n\nAs your Weather AI Advisor, I specialize in **Clothing recommendations**, **Outdoor sport suitability**, **Travel safety**, and **Health/Hydration alerts**. Tap any suggestion chip above or ask me a specific question!`;
+  }
+
+  /* ==========================================================================
      UI Helpers: Loading Spinner, Status, Alerts
      ========================================================================== */
 
@@ -891,6 +1279,25 @@
     DOM.shareTwitterBtn.addEventListener('click', shareToTwitter);
     DOM.shareWhatsappBtn.addEventListener('click', shareToWhatsApp);
     DOM.shareCopyBtn.addEventListener('click', copyWeatherSummary);
+
+    // Weather AI Advisor FAB and Drawer listeners
+    if (DOM.aiFabBtn) {
+      DOM.aiFabBtn.addEventListener('click', () => toggleAiChat());
+    }
+    if (DOM.aiCloseBtn) {
+      DOM.aiCloseBtn.addEventListener('click', () => toggleAiChat(false));
+    }
+    if (DOM.aiClearBtn) {
+      DOM.aiClearBtn.addEventListener('click', clearAiHistory);
+    }
+    if (DOM.aiInputForm) {
+      DOM.aiInputForm.addEventListener('submit', handleAiSubmit);
+    }
+    if (DOM.aiChips) {
+      DOM.aiChips.forEach(chip => {
+        chip.addEventListener('click', handleAiChipClick);
+      });
+    }
   }
 
   // Application Entry Point

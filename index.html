@@ -146,6 +146,75 @@
 
   </div>
 
+  <!-- Floating Weather AI Assistant FAB & Chat Drawer (Bonus Feature) -->
+  <aside class="ai-chat-widget" aria-label="Weather AI Assistant">
+    <!-- Floating Trigger Button -->
+    <button type="button" class="ai-fab-btn" id="ai-fab-btn" aria-expanded="false" aria-controls="ai-chat-drawer" title="Ask Weather AI">
+      <i class="fa-solid fa-wand-magic-sparkles ai-fab-icon" aria-hidden="true"></i>
+      <span class="ai-fab-label">Weather AI</span>
+    </button>
+
+    <!-- Expandable Frosted Glass Chat Drawer -->
+    <div class="ai-chat-drawer hidden" id="ai-chat-drawer" role="region" aria-label="AI Weather Chatbot">
+      <div class="ai-drawer-header">
+        <div class="ai-drawer-title-group">
+          <div class="ai-avatar">
+            <i class="fa-solid fa-robot" aria-hidden="true"></i>
+          </div>
+          <div>
+            <h2 class="ai-drawer-title">Weather AI Advisor</h2>
+            <span class="ai-context-badge" id="ai-context-badge">Active: Loading...</span>
+          </div>
+        </div>
+        <div class="ai-drawer-actions">
+          <button type="button" class="ai-icon-btn" id="ai-clear-btn" title="Clear Chat History">
+            <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="ai-icon-btn" id="ai-close-btn" title="Close Assistant">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Suggestion Chips -->
+      <div class="ai-suggestions-bar">
+        <button type="button" class="ai-chip" id="ai-chip-clothing" data-prompt="What should I wear today?">
+          👕 What should I wear?
+        </button>
+        <button type="button" class="ai-chip" id="ai-chip-outdoor" data-prompt="Is it good weather for outdoor activities?">
+          🏃 Outdoor activities?
+        </button>
+        <button type="button" class="ai-chip" id="ai-chip-travel" data-prompt="Is it safe for commute and travel right now?">
+          🚗 Commute &amp; Travel
+        </button>
+        <button type="button" class="ai-chip" id="ai-chip-health" data-prompt="Any health and hydration advice for this weather?">
+          💧 Health &amp; Hydration
+        </button>
+      </div>
+
+      <!-- Message History Container -->
+      <div class="ai-messages-container" id="ai-messages-container" role="log" aria-live="polite">
+        <!-- Messages rendered dynamically -->
+      </div>
+
+      <!-- Chat Input Form -->
+      <form class="ai-input-form" id="ai-input-form">
+        <input 
+          type="text" 
+          class="ai-input-field" 
+          id="ai-input-field" 
+          placeholder="Ask about clothing, weather, or travel..." 
+          autocomplete="off" 
+          required 
+          aria-label="Ask AI chatbot a question"
+        >
+        <button type="submit" class="ai-send-btn" id="ai-send-btn" aria-label="Send message">
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        </button>
+      </form>
+    </div>
+  </aside>
+
   <!-- Share Weather Modal -->
   <div class="modal-backdrop hidden" id="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
     <div class="modal-card">

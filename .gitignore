@@ -12,3 +12,5 @@ Thumbs.db
 # Temp local dev server & scripts
 serve.js
 rebuild_commits.ps1
+.agents/
+skills-lock.json
