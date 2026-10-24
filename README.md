@@ -143,18 +143,12 @@ const CONFIG = {
 ## 7. Live GitHub Pages Deployment
 
 To deploy this project to GitHub Pages:
-1. Push this repository to GitHub:
-   ```bash
-   git remote add origin https://github.com/<your-username>/WeatherMap-SPA.git
-   git branch -M main
-   git push -u origin main
-   ```
-2. In your GitHub repository:
-   - Navigate to **Settings** > **Pages**.
+1. In your GitHub repository:
+   - Navigate to [Settings > Pages](https://github.com/A7medFR/AdvancedWebProject/settings/pages).
    - Under **Build and deployment** > **Branch**, select `main` branch and `/ (root)` folder.
    - Click **Save**.
-3. Your live application will be available at:  
-   `https://<your-username>.github.io/WeatherMap-SPA/`
+2. Your live application will be instantly available at:  
+   **[https://a7medfr.github.io/AdvancedWebProject/](https://a7medfr.github.io/AdvancedWebProject/)**
 
 ---
 
