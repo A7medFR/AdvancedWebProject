@@ -1,0 +1,14 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor Directories
+.vscode/
+.idea/
+
+# Local logs
+*.log
+
+# Temp local dev server & scripts
+serve.js
+rebuild_commits.ps1
