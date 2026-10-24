@@ -73,24 +73,24 @@ sequenceDiagram
 
 In accordance with **Section 6 (Novelty & Advanced Features)**, the following extensions are implemented:
 
-- ⭐ **Favorites Bar (LocalStorage)**:
+-  **Favorites Bar (LocalStorage)**:
   - Save favorite cities into browser `localStorage`.
   - Rendered as quick-access liquid glass chips above the map.
   - One-click navigation and live weather retrieval.
   - Option to delete or add the currently active city.
-- 🗺️ **Interactive Click-to-Inspect**:
+-  **Interactive Click-to-Inspect**:
   - Click anywhere on the world map to drop a pin.
   - Asynchronously reverse-geocodes the clicked coordinate and fetches real-time weather.
-- 🌡️ **Metric (°C) / Imperial (°F) Unit Toggle**:
+-  **Metric (°C) / Imperial (°F) Unit Toggle**:
   - Instant conversion between Celsius and Fahrenheit.
   - Automatically converts wind speed between `m/s` and `mph`.
-- 📢 **Social Share & Direct Facebook Integration**:
+-  **Social Share & Direct Facebook Integration**:
   - **Post to Facebook**: Direct pop-up dialog targeting Facebook Share with a pre-filled meteorological summary.
   - **Web Share API**: Native share sheet on mobile devices.
   - **Copy to Clipboard**: Quick-copy formatted weather report with animated feedback.
-- 📍 **GPS "Locate Me"**:
+-  **GPS "Locate Me"**:
   - Uses the HTML5 Geolocation API with graceful permission handling.
-- 🤖 **Context-Aware Weather AI Advisor (Chatbot)**:
+-  **Context-Aware Weather AI Advisor (Chatbot)**:
   - Floating action button (FAB) toggles an expandable frosted liquid-glass chat drawer.
   - Contextual awareness: dynamically tracks the active city and current temperature.
   - Multi-variable meteorological intelligence engine:
@@ -173,7 +173,3 @@ To deploy this project to GitHub Pages:
 | **7. Novelty & Advanced Web API Extensions** | 100% | Weather AI Chatbot Advisor, LocalStorage Favorites, Map Click-to-Inspect, °C/°F unit toggle, Web Share API, and direct Facebook integration. |
 
 ---
-
-## 9. Academic Integrity Statement
-
-This project was developed strictly adhering to academic integrity standards. All HTML structure, CSS presentation, and JavaScript logic are written from first principles without copying legacy GeoNames/Facebook code or utilizing forbidden third-party rendering frameworks.
