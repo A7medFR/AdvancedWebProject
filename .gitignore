@@ -12,5 +12,8 @@ Thumbs.db
 # Temp local dev server & scripts
 serve.js
 rebuild_commits.ps1
+# Submission package artifacts
 .agents/
 skills-lock.json
+WeatherMap_Project_Submission/
+WeatherMap_Project_Submission.zip
