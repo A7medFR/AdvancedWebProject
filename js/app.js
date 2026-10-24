@@ -854,7 +854,7 @@
     aiChatState.lastBriefedCity = state.currentLocationName;
 
     if (!data || !data.main) {
-      renderAiBotMessage(`Hello! I'm your Weather AI Advisor. Click or search any city on the map, and I'll give you instant clothing, travel, and fitness recommendations!`, false);
+      renderAiBotMessage(`Hello! I'm your Weather Advisor. Select or search any city on the map for personalized wardrobe, travel, and fitness recommendations.`, false);
       return;
     }
 
@@ -1154,7 +1154,7 @@
     }
 
     // 6. Contextual Fallback for any other questions
-    return `🤖 In **${loc}**, the temperature is **${temp}${unitSymbol}** with **${data.weather[0].description}** (Wind: ${windSpeed} m/s, Humidity: ${humidity}%).\n\nAs your Weather AI Advisor, I specialize in **Clothing recommendations**, **Outdoor sport suitability**, **Travel safety**, and **Health/Hydration alerts**. Tap any suggestion chip above or ask me a specific question!`;
+    return `In **${loc}**, the temperature is **${temp}${unitSymbol}** with **${data.weather[0].description}** (Wind: ${windSpeed} m/s, Humidity: ${humidity}%).\n\nAsk about **clothing & wardrobe**, **outdoor sports**, **travel safety**, or **hydration alerts**—or tap any prompt above!`;
   }
 
   /* ==========================================================================

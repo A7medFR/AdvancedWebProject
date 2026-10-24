@@ -29,82 +29,74 @@
   <!-- Main Application Wrapper -->
   <div class="app-container">
 
-    <!-- Top Application Header -->
-    <header class="app-header">
-      <div class="header-left">
-        <div class="brand-badge">
-          <i class="fa-solid fa-cloud-sun-rain brand-icon" aria-hidden="true"></i>
-          <span class="brand-tag">Course Project 2</span>
+    <!-- Unified Apple Weather Floating Glass Island -->
+    <header class="app-island" role="banner">
+      <div class="island-main">
+        <!-- Brand / Identity -->
+        <div class="brand-group">
+          <div class="brand-symbol" aria-hidden="true">
+            <i class="fa-solid fa-cloud-sun-rain"></i>
+          </div>
+          <div class="brand-meta">
+            <h1 class="brand-title" id="app-heading">WeatherMap</h1>
+            <span class="brand-subtitle">Worldwide Meteorological Radar</span>
+          </div>
         </div>
-        <h1 class="app-title" id="app-heading">WeatherMap</h1>
+
+        <!-- Spotlight Search Input -->
+        <form class="search-form" id="search-form" novalidate role="search">
+          <div class="spotlight-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-leading-icon" aria-hidden="true"></i>
+            <input 
+              type="text" 
+              id="location-input" 
+              class="location-input" 
+              placeholder="Search city or country (e.g., Port Sudan, Tokyo, Paris)..." 
+              autocomplete="off" 
+              spellcheck="false" 
+              required
+              aria-label="Location search input"
+            >
+            <button type="button" class="clear-input-btn hidden" id="clear-input-btn" aria-label="Clear input text">
+              <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="spotlight-action-btn" id="locate-me-btn" title="Use GPS Location" aria-label="Use device GPS location">
+              <i class="fa-solid fa-location-crosshairs" aria-hidden="true"></i>
+            </button>
+            <button type="submit" class="spotlight-submit-btn" id="get-weather-btn" title="Get weather report" aria-label="Get weather">
+              <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </button>
+          </div>
+        </form>
+
+        <!-- Right Island Actions: Unit Segment & Status -->
+        <div class="island-actions">
+          <div class="segmented-control" role="group" aria-label="Temperature unit selection">
+            <button type="button" class="segment-btn active" id="unit-celsius" aria-pressed="true" title="Celsius (°C)">°C</button>
+            <button type="button" class="segment-btn" id="unit-fahrenheit" aria-pressed="false" title="Fahrenheit (°F)">°F</button>
+          </div>
+
+          <div class="status-indicator-badge" id="system-status" aria-live="polite" title="Live System Connection">
+            <span class="status-dot"></span>
+            <span class="status-text" id="status-label">Online</span>
+          </div>
+        </div>
       </div>
 
-      <div class="header-right">
-        <!-- Metric / Imperial Temperature Unit Switcher -->
-        <div class="unit-switch-group" role="group" aria-label="Temperature unit selection">
-          <button type="button" class="unit-btn active" id="unit-celsius" aria-pressed="true" title="Celsius (°C)">
-            °C
+      <!-- Understated Quick Favorites Strip -->
+      <div class="favorites-strip" aria-label="Saved locations">
+        <div class="favorites-scroll-area">
+          <span class="favorites-caption"><i class="fa-regular fa-star" aria-hidden="true"></i> Saved</span>
+          <div class="favorites-list" id="favorites-list" role="list">
+            <!-- Rendered dynamically via app.js -->
+          </div>
+          <button type="button" class="btn-save-favorite" id="save-favorite-btn" title="Save active location">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <span>Add Active</span>
           </button>
-          <button type="button" class="unit-btn" id="unit-fahrenheit" aria-pressed="false" title="Fahrenheit (°F)">
-            °F
-          </button>
-        </div>
-
-        <!-- Live Status Pill -->
-        <div class="status-pill" id="system-status" aria-live="polite">
-          <span class="status-indicator"></span>
-          <span class="status-text" id="status-label">Ready</span>
         </div>
       </div>
     </header>
-
-    <!-- Interactive Search & Control Glass Dock -->
-    <section class="controls-panel" aria-label="Location search controls">
-      <form class="search-form" id="search-form" novalidate>
-        <div class="input-wrapper">
-          <i class="fa-solid fa-magnifying-glass input-icon" aria-hidden="true"></i>
-          <input 
-            type="text" 
-            id="location-input" 
-            class="location-input" 
-            placeholder="Please enter location (e.g., Port Sudan, Tokyo, Paris)..." 
-            autocomplete="off" 
-            spellcheck="false" 
-            required
-            aria-label="Location search input"
-          >
-          <button type="button" class="clear-input-btn hidden" id="clear-input-btn" aria-label="Clear input text">
-            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-          </button>
-        </div>
-
-        <button type="submit" class="btn btn-primary" id="get-weather-btn">
-          <i class="fa-solid fa-bolt-lightning" aria-hidden="true"></i>
-          <span>Get Weather</span>
-        </button>
-
-        <button type="button" class="btn btn-secondary" id="locate-me-btn" title="Use your device GPS location">
-          <i class="fa-solid fa-location-crosshairs" aria-hidden="true"></i>
-          <span>Locate Me</span>
-        </button>
-      </form>
-    </section>
-
-    <!-- Quick-Access Favorites Bar (LocalStorage) -->
-    <section class="favorites-section" aria-label="Quick access favorites">
-      <div class="favorites-header">
-        <span class="favorites-label">
-          <i class="fa-solid fa-star" aria-hidden="true"></i> Quick Favorites:
-        </span>
-        <button type="button" class="btn-save-favorite" id="save-favorite-btn" title="Save current location to favorites">
-          <i class="fa-regular fa-bookmark" aria-hidden="true"></i>
-          <span>Save Active City</span>
-        </button>
-      </div>
-      <div class="favorites-list" id="favorites-list" role="list">
-        <!-- Rendered dynamically via app.js -->
-      </div>
-    </section>
 
     <!-- Map Container: Strictly Conforming to 70vh Viewport Height -->
     <main class="map-section">
@@ -148,10 +140,10 @@
 
   <!-- Floating Weather AI Assistant FAB & Chat Drawer (Bonus Feature) -->
   <aside class="ai-chat-widget" aria-label="Weather AI Assistant">
-    <!-- Floating Trigger Button -->
-    <button type="button" class="ai-fab-btn" id="ai-fab-btn" aria-expanded="false" aria-controls="ai-chat-drawer" title="Ask Weather AI">
+    <!-- Floating Trigger Button (Apple Intelligence Frosted Glass Capsule) -->
+    <button type="button" class="ai-fab-btn" id="ai-fab-btn" aria-expanded="false" aria-controls="ai-chat-drawer" title="Ask Weather Advisor">
       <i class="fa-solid fa-wand-magic-sparkles ai-fab-icon" aria-hidden="true"></i>
-      <span class="ai-fab-label">Weather AI</span>
+      <span class="ai-fab-label">Advisor</span>
     </button>
 
     <!-- Expandable Frosted Glass Chat Drawer -->
@@ -159,10 +151,10 @@
       <div class="ai-drawer-header">
         <div class="ai-drawer-title-group">
           <div class="ai-avatar">
-            <i class="fa-solid fa-robot" aria-hidden="true"></i>
+            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
           </div>
           <div>
-            <h2 class="ai-drawer-title">Weather AI Advisor</h2>
+            <h2 class="ai-drawer-title">Weather Advisor</h2>
             <span class="ai-context-badge" id="ai-context-badge">Active: Loading...</span>
           </div>
         </div>

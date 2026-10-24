@@ -4,11 +4,9 @@
 > **Course Project 2 Specification**  
 > **Submission Deliverables:** GitHub Repository + Live GitHub Pages Deployment
 
-![WeatherMap Preview](https://img.shields.io/badge/Status-Complete-emerald?style=for-the-badge)
 ![Vanilla JavaScript](https://img.shields.io/badge/Pure-Vanilla%20ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![CSS3](https://img.shields.io/badge/CSS3-Liquid%20Glass%20Design-1572B6?style=for-the-badge&logo=css3)
+![CSS3](https://img.shields.io/badge/CSS3-Apple%20Weather%20Minimalist%20Glass-1572B6?style=for-the-badge&logo=css3)
 ![Leaflet.js](https://img.shields.io/badge/Leaflet.js-OpenStreetMap-199900?style=for-the-badge&logo=leaflet)
-![OpenWeatherMap](https://img.shields.io/badge/OpenWeatherMap-REST%20API-EB6E4B?style=for-the-badge)
 
 ---
 
